@@ -31,6 +31,7 @@ def stream_users_in_batches(batch_size):
 
     except Error as e:
         print(f"Error: {e}")
+        return None
     finally:
         if connection:
             cursor.close()
