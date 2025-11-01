@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def stream_users_in_batches(batch_size):
+def streamusersinbatches(batch_size):
     """
     Generator that streams rows from 'users' table in batches.
     Each row is yielded one by one to save memory.
