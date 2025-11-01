@@ -38,7 +38,7 @@ def paginate_users(page_size, offset):
             connection.close()
 
 
-def lazy_pagination(page_size):
+def lazypaginate(page_size):
     """
     Processes users in pages and yields only those over age 25.
     """
@@ -52,7 +52,7 @@ def lazy_pagination(page_size):
     
 
 if __name__ == "__main__":
-    for page in lazy_pagination(page_size=3):
+    for page in lazypaginate(page_size=3):
         for user in page:
             print(f"  - {user['name']} {user['email']}, age {user['age']})")
         print("-" * 40)
