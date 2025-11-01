@@ -20,7 +20,7 @@ def stream_users_in_batches(batch_size):
             database="ALX_prodev"
         )
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT user_id, name, email, CAST(age AS UNSIGNED) AS age FROM users")
+        cursor.execute("SELECT user_id, name, email, CAST(age AS UNSIGNED) AS age FROM user_data")
 
         while True:
             batch = cursor.fetchmany(batch_size)
