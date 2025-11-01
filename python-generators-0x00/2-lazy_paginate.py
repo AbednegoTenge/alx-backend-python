@@ -20,7 +20,7 @@ def paginate_users(page_size, offset):
             database="ALX_prodev"
         )
         cursor = connection.cursor(dictionary=True)
-        cursor.execute(f"SELECT user_id, name, email, CAST(age AS UNSIGNED) AS age FROM user_data LIMIT {page_size} OFFSET {offset}")
+        cursor.execute(f"SELECT * LIMIT {page_size} OFFSET {offset}")
 
         while True:
             page = cursor.fetchmany(page_size)
