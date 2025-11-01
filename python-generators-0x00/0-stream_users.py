@@ -15,7 +15,7 @@ def stream_users():
             database="ALX_prodev"
         )
         cursor = connection.cursor()
-        cursor.execute("SELECT user_id, name, email, CAST(age AS UNSIGNED) AS age FROM users")
+        cursor.execute("SELECT user_id, name, email, CAST(age AS UNSIGNED) AS age FROM user_data")
 
         for row in cursor:
             yield row
