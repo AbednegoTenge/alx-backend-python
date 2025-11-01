@@ -66,11 +66,11 @@ def connect_to_prodev():
 # 4️⃣ CREATE TABLE IF NOT EXISTS
 # -------------------------------------------------------------
 def create_table(connection):
-    """Creates a table named 'users' if it does not already exist."""
+    """Creates a table named 'user_data' if it does not already exist."""
     try:
         cursor = connection.cursor()
         create_table_query = """
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS user_data (
             user_id CHAR(36) PRIMARY KEY,     
             name VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,
@@ -95,7 +95,7 @@ def insert_data(connection, data):
     try:
         cursor = connection.cursor()
         insert_query = """
-        INSERT INTO users (user_id, name, email, age)
+        INSERT INTO user_data (user_id, name, email, age)
         VALUES (%s, %s, %s, %s)
         """
         # Execute the query using data tuple (user_id, name, email, age)
