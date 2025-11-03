@@ -1,22 +1,24 @@
 import mysql.connector
 import functools
-import time
+from datetime import datetime
 
 # --- decorator to log SQL queries ---
 def log_queries(func):
-    "Logs SQL queries and execution time."
+    "Logs SQL queries with timestamps."
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         query = kwargs.get("query") or (args[0] if args else None)
-        start = time.perf_counter()
-        print(f"[LOG] Executing SQL Query: {query}")
+        start_time = datetime.now()
+        print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] [LOG] Executing SQL Query: {query}")
         try:
             result = func(*args, **kwargs)
-            duration = time.perf_counter() - start
-            print(f"[LOG] Query executed successfully in {duration:.4f}s")
+            end_time = datetime.now()
+            duration = (end_time - start_time).total_seconds()
+            print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] [LOG] Query executed successfully in {duration:.4f}s")
             return result
         except Exception as e:
-            print(f"[ERROR] Query failed: {e}")
+            error_time = datetime.now()
+            print(f"[{error_time.strftime('%Y-%m-%d %H:%M:%S')}] [ERROR] Query failed: {e}")
             raise
     return wrapper
 
