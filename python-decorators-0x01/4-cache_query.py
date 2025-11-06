@@ -7,13 +7,21 @@ query_cache = {}
 def cache_query(func):
   @functools.wraps(func)
   def wrapper(con, query, *args, **kwargs):
+    
     if query in query_cache:
-      print("Fetching from cache")
-      return query_cache[query]
+      start_time = time.time()
+      result = query_cache[query]
+      end_time = time.time()
+      print(f"Fetching from cache - Time taken: {(end_time - start_time) * 1000:..4f} ms")
+      return result
+
+    start_time = time.time()
     result = func(con, query *args, **kwargs)
+    end_time = time.time()
     query_cache[query] = result
-    print("saved to cache")
+    print(f"Fetching from database - Time taken: {(end_time - start_time) * 1000:..4f} ms")
     return result
+    
   return wrapper
     
 
