@@ -15,7 +15,7 @@ def with_db_connection(func):
   return wrapper
 
 
-@with_db_connection()
+@with_db_connection
 def get_user_by_id(con, user_id):
   cursor = con.cursor()
   cursor.execute("SELECT * FROM users WHERE id = ?", (user_id))
