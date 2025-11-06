@@ -15,7 +15,7 @@ async def connect_to_database():
     )
 
 
-async def fetch_users():
+async def async_fetch_users():
     """Fetch all users using its own connection."""
     conn = await connect_to_database()
     async with conn.cursor() as cursor:
@@ -27,7 +27,7 @@ async def fetch_users():
     conn.close()
 
 
-async def fetch_older_users():
+async def async_fetch_older_users():
     """Fetch users older than 40 using a separate connection."""
     conn = await connect_to_database()
     async with conn.cursor() as cursor:
@@ -41,8 +41,8 @@ async def fetch_older_users():
 
 async def fetch_concurrently():
     await asyncio.gather(
-        fetch_users(),
-        fetch_older_users()
+        async_fetch_users(),
+        async_fetch_older_users()
     )
 
 if __name__ == "__main__":
