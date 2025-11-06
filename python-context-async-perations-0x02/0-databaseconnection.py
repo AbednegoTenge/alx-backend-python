@@ -34,7 +34,7 @@ class DatabaseConnection:
 with DatabaseConnection('ALX_prodev') as conn:
     if conn:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM user_data")
+            cursor.execute("SELECT * FROM users")
             rows = cursor.fetchall()
             for row in rows:
                 print(row)
