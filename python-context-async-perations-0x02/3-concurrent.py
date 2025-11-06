@@ -1,49 +1,36 @@
 import asyncio
-import aiomysql
-import os
-from dotenv import load_dotenv
+import aiosqlite
 
-load_dotenv()
-
-async def connect_to_database():
-    """Establish a connection to the MySQL database asynchronously."""
-    return await aiomysql.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        db="ALX_prodev"
-    )
+DB_PATH = "ALX_prodev.db"  # path to your SQLite database
 
 
 async def async_fetch_users():
-    """Fetch all users using its own connection."""
-    conn = await connect_to_database()
-    async with conn.cursor() as cursor:
-        await cursor.execute("SELECT * FROM user_data")
-        rows = await cursor.fetchall()
-        print("All Users:")
-        for row in rows:
-            print(row)
-    conn.close()
+    """Fetch all users from the user_data table."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute("SELECT * FROM user_data") as cursor:
+            rows = await cursor.fetchall()
+            print("All Users:")
+            for row in rows:
+                print(row)
 
 
 async def async_fetch_older_users():
-    """Fetch users older than 40 using a separate connection."""
-    conn = await connect_to_database()
-    async with conn.cursor() as cursor:
-        await cursor.execute("SELECT * FROM user_data WHERE age > 40")
-        rows = await cursor.fetchall()
-        print("\nUsers older than 40:")
-        for row in rows:
-            print(row)
-    conn.close()
+    """Fetch users older than 40."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute("SELECT * FROM user_data WHERE age > 40") as cursor:
+            rows = await cursor.fetchall()
+            print("\nUsers older than 40:")
+            for row in rows:
+                print(row)
 
 
 async def fetch_concurrently():
+    # Run both tasks concurrently
     await asyncio.gather(
         async_fetch_users(),
         async_fetch_older_users()
     )
+
 
 if __name__ == "__main__":
     asyncio.run(fetch_concurrently())
