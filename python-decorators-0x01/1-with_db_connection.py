@@ -6,7 +6,7 @@ def with_db_connection(func):
   
   @functools.wraps(func)
   def wrapper(*args, **kwargs):
-    con = sqlite3.connection('users.db')
+    con = sqlite3.connect('users.db')
     try:
       result = func(con, *args, **kwargs)
       return result
