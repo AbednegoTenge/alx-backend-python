@@ -12,14 +12,14 @@ def cache_query(func):
       start_time = time.time()
       result = query_cache[query]
       end_time = time.time()
-      print(f"Fetching from cache - Time taken: {(end_time - start_time) * 1000:..4f} ms")
+      print(f"Fetching from cache - Time taken: {(end_time - start_time) * 1000:.4f} ms")
       return result
 
     start_time = time.time()
-    result = func(con, query *args, **kwargs)
+    result = func(con, query, *args, **kwargs)
     end_time = time.time()
     query_cache[query] = result
-    print(f"Fetching from database - Time taken: {(end_time - start_time) * 1000:..4f} ms")
+    print(f"Fetching from database - Time taken: {(end_time - start_time) * 1000:.4f} ms")
     return result
     
   return wrapper
