@@ -130,6 +130,31 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         # Stop the patcher to restore the original requests.get
         cls.get_patcher.stop()
 
+    def test_public_repos(self):
+        """Test that public_repos returns the expected list of repos.
+        """
+        # Create a GithubOrgClient instance with "google"
+        # The org name is extracted from the repos_url in org_payload
+        repos_url = self.org_payload.get("repos_url")
+        org_name = repos_url.split("/")[-2] if repos_url else "google"
+        client = GithubOrgClient(org_name)
+        # Call public_repos without license filter
+        result = client.public_repos()
+        # Verify that public_repos returns all expected repos
+        self.assertEqual(result, self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test that public_repos with license filter returns apache-2.0 repos.
+        """
+        # Create a GithubOrgClient instance with "google"
+        repos_url = self.org_payload.get("repos_url")
+        org_name = repos_url.split("/")[-2] if repos_url else "google"
+        client = GithubOrgClient(org_name)
+        # Call public_repos with apache-2.0 license filter
+        result = client.public_repos(license="apache-2.0")
+        # Verify that public_repos returns only apache-2.0 licensed repos
+        self.assertEqual(result, self.apache2_repos)
+
     @classmethod
     def side_effect(cls, url):
         """Side effect function that returns different payloads based on URL.
@@ -166,31 +191,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 return MockResponse(cls.repos_payload)
         # Return empty dict for other URLs
         return MockResponse({})
-
-    def test_public_repos(self):
-        """Test that public_repos returns the expected list of repos.
-        """
-        # Create a GithubOrgClient instance with "google"
-        # The org name is extracted from the repos_url in org_payload
-        repos_url = self.org_payload.get("repos_url")
-        org_name = repos_url.split("/")[-2] if repos_url else "google"
-        client = GithubOrgClient(org_name)
-        # Call public_repos without license filter
-        result = client.public_repos()
-        # Verify that public_repos returns all expected repos
-        self.assertEqual(result, self.expected_repos)
-
-    def test_public_repos_with_license(self):
-        """Test that public_repos with license filter returns apache-2.0 repos.
-        """
-        # Create a GithubOrgClient instance with "google"
-        repos_url = self.org_payload.get("repos_url")
-        org_name = repos_url.split("/")[-2] if repos_url else "google"
-        client = GithubOrgClient(org_name)
-        # Call public_repos with apache-2.0 license filter
-        result = client.public_repos(license="apache-2.0")
-        # Verify that public_repos returns only apache-2.0 licensed repos
-        self.assertEqual(result, self.apache2_repos)
 
 
 if __name__ == "__main__":
