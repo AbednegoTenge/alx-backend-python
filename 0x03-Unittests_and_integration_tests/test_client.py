@@ -117,9 +117,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         # Patch requests.get at the class level to mock external HTTP requests
         # This patcher will persist across all test methods in this class
-        # We patch utils.requests.get since get_json imports requests in
-        # utils.py
-        cls.get_patcher = patch('utils.requests.get')
+        cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
         # Set up side_effect to return different payloads based on URL
         # The side_effect function will determine which fixture to return
