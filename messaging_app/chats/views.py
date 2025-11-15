@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -19,6 +19,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     lookup_field = 'conversation_id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['conversation_id']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
     
     def list(self, request):
         """List all conversations"""
@@ -78,6 +82,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     lookup_field = 'message_id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['message_body', 'sender__email', 'sender__first_name', 'sender__last_name']
+    ordering_fields = ['sent_at']
+    ordering = ['-sent_at']
     
     def list(self, request):
         """List all messages"""
