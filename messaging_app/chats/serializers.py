@@ -111,7 +111,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         write_only=True,
         required=True
     )
-    messages = MessageSerializer(many=True, read_only=True)
+    messages = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(read_only=True)
     
     class Meta:
@@ -123,6 +123,11 @@ class ConversationSerializer(serializers.ModelSerializer):
             'messages',
             'created_at',
         ]
+    
+    def get_messages(self, obj):
+        """Get messages within the conversation using SerializerMethodField"""
+        messages = obj.messages.all()
+        return MessageSerializer(messages, many=True).data
     
     def create(self, validated_data):
         """Create conversation with participants (many-to-many relationship)"""
