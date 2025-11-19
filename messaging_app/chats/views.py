@@ -1,7 +1,10 @@
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, filters
 from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
+from .permissions import IsMessageSenderOrParticipant
+from rest_framework.permissions import IsAuthenticated
+from .auth import CustomTokenAuthentication
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -17,6 +20,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     ordering_fields = ['sent_at']
     ordering = ['-sent_at']
 
+    permission_classes = [IsAuthenticated, IsMessageSenderOrParticipant]
+    authentication_classes = [CustomTokenAuthentication]
+    
     def get_queryset(self):
         user = self.request.user
         return Message.objects.filter(
