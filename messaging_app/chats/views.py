@@ -1,7 +1,5 @@
 from rest_framework import viewsets, status, filters
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.http import Http404
+from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,6 +17,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     ordering_fields = ['sent_at']
     ordering = ['-sent_at']
 
+    def get_queryset(self):
+        user = self.request.user
+        return Message.objects.filter(
+            Q(sender=user) | Q(conversation__participants=user)
+        ).distinct()
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
