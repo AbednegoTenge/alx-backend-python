@@ -5,19 +5,14 @@ from .models import Conversation, Message, User
 class UserSerializer(serializers.ModelSerializer):
     # Fields that are read only
     user_id = serializers.UUIDField(read_only=True)
-    first_name = serializers.CharField(read_only=True)
-    last_name = serializers.CharField(read_only=True)
-    email = serializers.EmailField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
     # Field that is write only
     password = serializers.CharField(write_only=True, required=True)
-    # Field that is read only
-    created_at = serializers.DateTimeField(read_only=True)
 
     # Meta class for the serializer
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'created_at']
-        # Extra kwargs for the fields
+        fields = ['user_id', 'username', 'first_name', 'last_name', 'email', 'password', 'phone_number', 'role', 'created_at']
         extra_kwargs = {
             'email': {'required': True},
             'first_name': {'required': True},
