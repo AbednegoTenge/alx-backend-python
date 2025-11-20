@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'chats',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -141,4 +142,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'chats.auth.CustomTokenAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'chats.pagination.MessagePagination',
+    'PAGE_SIZE': 20
 }
