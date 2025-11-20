@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters
 from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
-from .permissions import IsMessageSenderOrParticipant
+from .permissions import IsMessageSenderOrParticipant, IsParticipantOfConversation
 from rest_framework.permissions import IsAuthenticated
 from .auth import CustomTokenAuthentication
 class UserViewSet(viewsets.ModelViewSet):
@@ -37,3 +37,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
     search_fields = ['participants__first_name', 'participants__last_name']
     ordering_fields = ['created_at']
     ordering = ['-created_at']
+
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    authentication_classes = [CustomTokenAuthentication]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Conversation.objects.filter(participants=user)
+
