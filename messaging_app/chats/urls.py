@@ -17,7 +17,7 @@ urlpatterns = [
     path('', include(conversations_router.urls)),
 
     # JWT authentication endpoints
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # login to get access & refresh tokens
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # refresh access token
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # login to get access & refresh tokens
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # refresh access token
 
 ]

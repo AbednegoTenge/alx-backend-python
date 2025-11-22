@@ -3,7 +3,7 @@ from django.db.models import Q
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
 from .permissions import IsMessageSenderOrParticipant, IsParticipantOfConversation
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .auth import CustomTokenAuthentication
 from .pagination import MessagePagination
 from .filters import MessageFilter
@@ -14,6 +14,12 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'user_id'
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return super().get_permissions()
+
 
 
 class MessageViewSet(viewsets.ModelViewSet):

@@ -19,6 +19,10 @@ class User(AbstractUser):
     
     # Override email field to ensure uniqueness and NOT NULL
     email = models.EmailField(unique=True, db_index=True)
+
+    @property
+    def id(self):
+        return self.user_id
     
     class Meta:
         db_table = 'user'

@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "fc3bc53d-2bc5-44fe-9823-453e5ad08dfc",
+		"name": "post_man_collections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39293417"
+	},
+	"item": [
+		{
+			"name": "Log in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Abednego\",\r\n    \"password\": \"Mabel123Abed456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/login/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"JohnDoe\",\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"email\": \"johndoe@example.com\",\r\n    \"password\": \"mypassword123\",\r\n    \"phone_number\": \"0245000000\",\r\n    \"role\": \"guest\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYzODUwOTYzLCJpYXQiOjE3NjM4NDkxNjMsImp0aSI6Ijg5MDdiZDE5NzI4MzRkMThhZWM5MzlmYmQxYjExNjM5IiwidXNlcl9pZCI6ImFmYjhlNDQ1LWU5ZjktNDZhNS1hY2M1LWM3YTZlNDE2N2U1YyJ9._tTVY5zB2YjkG5kuclHp3SbFHzUS8p6nWaYDIprHAHA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Conversation",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYzODUwOTYzLCJpYXQiOjE3NjM4NDkxNjMsImp0aSI6Ijg5MDdiZDE5NzI4MzRkMThhZWM5MzlmYmQxYjExNjM5IiwidXNlcl9pZCI6ImFmYjhlNDQ1LWU5ZjktNDZhNS1hY2M1LWM3YTZlNDE2N2U1YyJ9._tTVY5zB2YjkG5kuclHp3SbFHzUS8p6nWaYDIprHAHA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"participants_id\": [\"61ff17a5-322a-48e2-8d86-3db6fad1b7ae\", \"afb8e445-e9f9-46a5-acc5-c7a6e4167e5c\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/conversations/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Message",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYzODUwOTYzLCJpYXQiOjE3NjM4NDkxNjMsImp0aSI6Ijg5MDdiZDE5NzI4MzRkMThhZWM5MzlmYmQxYjExNjM5IiwidXNlcl9pZCI6ImFmYjhlNDQ1LWU5ZjktNDZhNS1hY2M1LWM3YTZlNDE2N2U1YyJ9._tTVY5zB2YjkG5kuclHp3SbFHzUS8p6nWaYDIprHAHA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sender_id\": \"afb8e445-e9f9-46a5-acc5-c7a6e4167e5c\",\r\n    \"message_body\": \"How are you doing?\",\r\n    \"conversation_id\": \"7ac76fb0-9459-426e-a1c9-d5f434c5cef3\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/conversations/7ac76fb0-9459-426e-a1c9-d5f434c5cef3/messages/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						"7ac76fb0-9459-426e-a1c9-d5f434c5cef3",
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Messages",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYzODUwOTYzLCJpYXQiOjE3NjM4NDkxNjMsImp0aSI6Ijg5MDdiZDE5NzI4MzRkMThhZWM5MzlmYmQxYjExNjM5IiwidXNlcl9pZCI6ImFmYjhlNDQ1LWU5ZjktNDZhNS1hY2M1LWM3YTZlNDE2N2U1YyJ9._tTVY5zB2YjkG5kuclHp3SbFHzUS8p6nWaYDIprHAHA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/conversations/7ac76fb0-9459-426e-a1c9-d5f434c5cef3/messages/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"conversations",
+						"7ac76fb0-9459-426e-a1c9-d5f434c5cef3",
+						"messages",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

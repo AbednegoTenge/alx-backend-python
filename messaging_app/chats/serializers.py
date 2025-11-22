@@ -51,7 +51,7 @@ class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
     sender_id = serializers.UUIDField(write_only=True, required=True)
     conversation_id = serializers.UUIDField(write_only=True, required=True)
-    message_body = serializers.CharField(write_only=True, required=True)
+    message_body = serializers.CharField(write_only=False, required=True)
     sent_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
@@ -123,7 +123,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         return conversation
 
     def get_messages(self, obj):
-        messages = obj.prefetch_related('messages').order_by('sent_at').all()
+        messages = obj.messages.all().order_by('sent_at')
         return MessageSerializer(messages, many=True).data
 
     def update(self, instance, validated_data):
