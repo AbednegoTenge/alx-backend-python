@@ -1,0 +1,27 @@
+2025-11-23 17:23:10.203191 - User: AnonymmousUser - Path: /
+2025-11-23 17:23:10.932272 - User: AnonymmousUser - Path: /favicon.ico
+2025-11-23 17:23:38.124185 - User: AnonymmousUser - Path: /api/login
+2025-11-23 17:23:46.409164 - User: AnonymmousUser - Path: /api-auth/login
+2025-11-23 17:23:46.430247 - User: AnonymmousUser - Path: /api-auth/login/
+2025-11-23 17:24:13.283946 - User: AnonymmousUser - Path: /api-auth/login/
+2025-11-23 17:24:38.936510 - User: AnonymmousUser - Path: /api-auth/register/
+2025-11-23 17:24:50.782983 - User: AnonymmousUser - Path: /api-auth/signup/
+2025-11-23 17:24:59.581927 - User: AnonymmousUser - Path: /api-auth/sign-up/
+2025-11-23 17:25:05.683195 - User: AnonymmousUser - Path: /api-auth/signUp/
+2025-11-23 17:25:18.861423 - User: AnonymmousUser - Path: /api-auth/login/
+2025-11-23 17:25:44.301625 - User: AnonymmousUser - Path: /api-auth/login/
+2025-11-23 17:27:04.288169 - User: AnonymmousUser - Path: /admin/
+2025-11-23 17:27:04.352724 - User: AnonymmousUser - Path: /admin/login/
+2025-11-23 17:27:21.096619 - User: AnonymmousUser - Path: /admin/login/
+2025-11-23 17:27:24.723554 - User:   (abed@example.com) - Path: /admin/
+2025-11-23 17:28:05.205055 - User:   (abed@example.com) - Path: /admin/chats/user/add/
+2025-11-23 17:28:05.903197 - User:   (abed@example.com) - Path: /admin/jsi18n/
+2025-11-23 17:28:39.800396 - User:   (abed@example.com) - Path: /admin/chats/user/add/
+2025-11-23 17:28:42.622011 - User:   (abed@example.com) - Path: /admin/chats/user/3e486b8c-d653-4585-81c9-581a74f60f74/change/
+2025-11-23 17:28:43.445535 - User:   (abed@example.com) - Path: /admin/jsi18n/
+2025-11-23 17:29:23.176015 - User:   (abed@example.com) - Path: /admin/chats/user/3e486b8c-d653-4585-81c9-581a74f60f74/change/
+2025-11-23 17:29:25.559148 - User:   (abed@example.com) - Path: /admin/chats/user/
+2025-11-23 17:29:26.482789 - User:   (abed@example.com) - Path: /admin/jsi18n/
+2025-11-23 17:29:57.385520 - User:   (abed@example.com) - Path: /api-auth/login/
+2025-11-23 17:30:06.341448 - User:   (abed@example.com) - Path: /api-auth/login/
+2025-11-23 17:30:15.159865 - User: Abednego Tenge (abednegotenge180@gmail.com) - Path: /accounts/profile/
