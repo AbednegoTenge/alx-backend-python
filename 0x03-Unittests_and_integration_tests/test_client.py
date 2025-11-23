@@ -120,9 +120,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
             raise ValueError(f"Wrong URL called: {url}")
 
-        cls.get_patcher = patch(
-            "requests.get"
-        )
+        cls.get_patcher = patch("requests.get")
         mock_get = cls.get_patcher.start()
         mock_get.side_effect = side_effect
 
