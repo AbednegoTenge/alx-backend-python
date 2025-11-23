@@ -40,7 +40,7 @@ class TestGithubOrgClient(unittest.TestCase):
         # Mock the org property to return a payload with repos_url
         # This avoids needing to mock get_json and the full org call chain
         with patch.object(GithubOrgClient, "org",
-                          new_callable=PropertyMock) as mock_org:
+                        new_callable=PropertyMock) as mock_org:
             test_url = "https://api.github.com/orgs/google/repos"
             # Set up the mock org to return a dict with repos_url
             mock_org.return_value = {"repos_url": test_url}
@@ -49,9 +49,10 @@ class TestGithubOrgClient(unittest.TestCase):
             # Access _public_repos_url property which extracts repos_url
             # from org
             result = client._public_repos_url
-            # Verify that _public_repos_url correctly extracts repos_url from
-            #  org
-            self.assertEqual(result, mock_org.return_value["repos_url"])
+            # Verify that _public_repos_url correctly extracts repos_url from org
+            self.assertEqual(result, test_url)
+            # Verify that the org property was accessed
+            mock_org.assert_called_once()
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
