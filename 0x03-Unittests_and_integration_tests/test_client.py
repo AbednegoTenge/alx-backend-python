@@ -102,28 +102,28 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for public_repos method of GithubOrgClient"""
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Set up for the integration tests"""
 
         def side_effect(url):
             """Side effect function for mocking requests.get"""
-            base_url = self.org_payload["repos_url"].replace("/repos", "")
+            base_url = cls.org_payload["repos_url"].replace("/repos", "")
 
             mock_resp = Mock()
 
             if url == base_url:
-                mock_resp.json.return_value = self.org_payload
+                mock_resp.json.return_value = cls.org_payload
                 return mock_resp
-            elif url == self.org_payload["repos_url"]:
-                mock_resp.json.return_value = self.repos_payload
+            elif url == cls.org_payload["repos_url"]:
+                mock_resp.json.return_value = cls.repos_payload
                 return mock_resp
 
             raise ValueError(f"Wrong URL called: {url}")
 
-        self.get_patcher = patch(
+        cls.get_patcher = patch(
             "requests.get"
         )
-        mock_get = self.get_patcher.start()
+        mock_get = cls.get_patcher.start()
         mock_get.side_effect = side_effect
 
     def test_public_repos(self):
@@ -140,9 +140,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         )
 
     @classmethod
-    def tearDownClass(self):
+    def tearDownClass(cls):
         """Tear down for the integration tests"""
-        self.get_patcher.stop()
+        cls.get_patcher.stop()
 
 
 if __name__ == "__main__":
