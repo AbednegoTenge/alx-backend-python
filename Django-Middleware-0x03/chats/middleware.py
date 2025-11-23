@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.http import HttpResponseForbidden
 
 
 class RequestLoggingMiddleware:
@@ -14,6 +15,23 @@ class RequestLoggingMiddleware:
         # write logs to a file named requests.log
         with open("requests.log", "a") as f:
             f.write(log_message)
+
+        response = self.get_response(request)
+        return response
+
+
+class RestrictAccessByTimeMiddleware:
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # get current hour
+        current_hour = datetime.now().hour
+
+        # deny access between 10pm and 6am
+        if current_hour >= 22 or current_hour < 6:
+            return HttpResponseForbidden("Access denied")
 
         response = self.get_response(request)
         return response
