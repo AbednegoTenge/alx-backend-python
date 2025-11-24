@@ -11,3 +11,12 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender} to {self.recipient}: {self.content}'
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user} - {self.message.content}'
