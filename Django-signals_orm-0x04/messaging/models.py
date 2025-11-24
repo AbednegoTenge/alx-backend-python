@@ -1,3 +1,4 @@
+from nt import times
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -7,6 +8,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
     content = models.TextField()
+    edited = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -20,3 +22,13 @@ class Notification(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.message.content}'
+
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_history')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_history')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=False)
+
+
