@@ -1,9 +1,11 @@
-from nt import times
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from .models import Message, Notification, MessageHistory
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.contrib.auth.models import User
+
+
 
 
 
@@ -38,3 +40,16 @@ def update_message_history(sender, instance, **kwargs):
             instance.edited_by = instance.sender
 
 
+@receiver(post_delete, sender=User)
+def delete_message_history(sender, instance, **kwargs):
+
+    #Get message sent or received by user
+    user_messages = Message.objects.filter(sender=instance.sender) | Message.objects.filter(receiver=instance.receiver)
+    # Delete message history for those messages
+    MessageHistory.objects.filter(message__in=user_messages).delete()
+    # Delete notifications for those messages
+    Notification.objects.filter(user=instance).delete()
+    # Delete notifications tied to the message
+    Notification.objects.filter(message__in=user_messages).delete()
+    # Delete the messages themselves
+    user_messages.delete()
