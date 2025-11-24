@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from .models import Message, Notification, MessageHistory
 from django.core.mail import send_mail
+from django.utils import timezone
 
 
 
@@ -29,8 +30,11 @@ def update_message_history(sender, instance, **kwargs):
                 message=instance, 
                 sender=instance.sender, 
                 receiver=instance.receiver, 
-                content=old_message.content, 
+                content=old_message.content,
                 timestamp=old_message.timestamp
             )
             instance.edited = True
+            instance.edited_at = timezone.now()
+            instance.edited_by = instance.sender
+
 
