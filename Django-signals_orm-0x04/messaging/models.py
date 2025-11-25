@@ -14,7 +14,15 @@ class Message(models.Model):
     edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='edited_messages')
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    parent_message = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='replies'
+    )
 
+    objects = models.Manager()
     unread = UnreadMessagesManager()
 
 

@@ -1,3 +1,5 @@
+from webbrowser import get
+from django.dispatch import receiver
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import logout
 from .models import Message
@@ -7,6 +9,9 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.contrib.auth.models import User
 from django.db.models import Q
+from .utils import get_message_thread
+
+
 
 
 
@@ -27,11 +32,20 @@ def get_messages(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
     user = request.user
     messages = Message.objects.filter(
+        parent_message = None,
+        receiver = user
+    ).filter(
         (Q(sender=user, receiver=other_user) | Q(sender=other_user, receiver=user))
-    ).order_by('timestamp')
+    ).select_related('sender', 'receiver')\
+    .prefetch_related('replies__sender', 'replies__receiver')\
+    .order_by('-timestamp')
 
-    data = serializers.serialize('json', messages)
-    return JsonResponse(data, safe=False)
+    threads = []
+
+    for msg in messages:
+        threads.extend(get_message_thread(msg))
+
+    return JsonResponse(threads, safe=False)
 
 
 @login_required
@@ -44,6 +58,9 @@ def unread_messages(request):
     )
     data = serializers.serialize('json', unread_messages)
     return JsonResponse(data, safe=False)
+
+    
+
 
 
 
