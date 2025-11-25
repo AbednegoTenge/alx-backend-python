@@ -1,13 +1,8 @@
-from nt import times
 from django.db import models
 from django.contrib.auth.models import User
+from .managers import UnreadMessagesManager
 
 
-# Custom Manager
-class UnreadMessagesManager(models.Manager):
-
-    def unread(self, user):
-        return self.filter(is_read=False, receiver=user).only('id', 'sender', 'content', 'timestamp')
 
 # Create your models here.
 class Message(models.Model):
@@ -20,7 +15,7 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    unread_messages = UnreadMessagesManager()
+    unread = UnreadMessagesManager()
 
 
     def __str__(self):
