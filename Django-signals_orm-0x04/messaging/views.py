@@ -34,6 +34,14 @@ def get_messages(request, user_id):
     return JsonResponse(data, safe=False)
 
 
+@login_required
+def unread_messages(request):
+    user = request.user
+    unread_messages = Message.unread_messages.unread(user).order_by('-timestamp')
+    data = serializers.serialize('json', unread_messages)
+    return JsonResponse(data, safe=False)
+
+
 
     
         
