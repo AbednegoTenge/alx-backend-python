@@ -30,12 +30,11 @@ def delete_user(request):
 @cache_page(60, key_prefix='user_messages')
 def get_messages(request, user_id):
     other_user = get_object_or_404(User, pk=user_id)
-    user = request.user
     messages = Message.objects.filter(
         parent_message = None,
-        receiver = user
+        receiver = request.user
     ).filter(
-        (Q(sender=user, receiver=other_user) | Q(sender=other_user, receiver=user))
+        (Q(sender=request.user, receiver=other_user) | Q(sender=other_user, receiver=request.user))
     ).select_related('sender', 'receiver')\
     .prefetch_related('replies__sender', 'replies__receiver')\
     .order_by('-timestamp')
