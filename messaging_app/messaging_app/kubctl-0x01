@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# scale the app to thre replicas
+kubectl scale deployment messaging-app-deployment --replicas=3
+
+# verifying running pods
+kubectl get pods
+
+SERVICE_IP=$(minikube service messaging-app-service --url 2>/dev/null)
+
+if [ -z "$SERVICE_IP" ]; then
+    echo "❌ Could not retrieve service URL. Make sure your service is exposed and named messaging-app-service."
+else
+    echo "🔗 Load testing URL: $SERVICE_IP"
+    echo "⏳ Running wrk benchmark for 10 seconds..."
+
+    wrk -t4 -c50 -d10s $SERVICE_IP
+fi
+
+kubectl top pods
+kubectl top nodes
