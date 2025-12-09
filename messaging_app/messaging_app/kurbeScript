@@ -27,7 +27,7 @@ echo "Minikube cluster started successfully"
 
 # verify the cluster is running
 echo "⏳ verifying the cluster is running"
-kuberctl cluster-info
+kubectl cluster-info
 
 if [$? -ne 0 ]; then
 	echo "kubernetes cluster is not running"
@@ -37,6 +37,6 @@ echo "kubernetes cluster is running"
 
 # retrieve available pods
 echo "⏳ retrieving available pods"
-kuberctl get pods --all-namespaces
+kubectl get pods --all-namespaces
 
 echo "----kuberscript completed successfully"
