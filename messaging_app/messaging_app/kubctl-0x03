@@ -1,0 +1,126 @@
+#!/bin/bash
+
+echo "----kubctl-0x03: Rolling Update Script----"
+
+DEPLOYMENT_NAME="django-messaging-app-blue"
+SERVICE_NAME="django-messaging-service"
+CURL_INTERVAL=2  # Seconds between curl requests
+
+# Function to continuously test the app
+test_app() {
+    local port=$1
+    local duration=$2
+    local start_time=$(date +%s)
+    local success_count=0
+    local fail_count=0
+    
+    echo "🔄 Starting continuous availability testing..."
+    echo "Testing endpoint: http://localhost:$port/"
+    
+    while true; do
+        current_time=$(date +%s)
+        elapsed=$((current_time - start_time))
+        
+        if [ $elapsed -gt $duration ]; then
+            break
+        fi
+        
+        response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$port/ 2>/dev/null)
+        timestamp=$(date +"%H:%M:%S")
+        
+        if [ "$response" = "200" ] || [ "$response" = "000" ]; then
+            success_count=$((success_count + 1))
+            echo "[$timestamp] ✅ Response: $response - Success count: $success_count"
+        else
+            fail_count=$((fail_count + 1))
+            echo "[$timestamp] ❌ Response: $response - FAILED - Fail count: $fail_count"
+        fi
+        
+        sleep $CURL_INTERVAL
+    done
+    
+    echo ""
+    echo "📊 Test Results:"
+    echo "   Total successful requests: $success_count"
+    echo "   Total failed requests: $fail_count"
+    
+    if [ $fail_count -eq 0 ]; then
+        echo "   ✅ No downtime detected during rolling update!"
+    else
+        echo "   ⚠️  Detected $fail_count failed requests"
+    fi
+}
+
+# Check if deployment exists
+if ! kubectl get deployment $DEPLOYMENT_NAME &> /dev/null; then
+    echo "❌ Deployment $DEPLOYMENT_NAME not found. Creating initial deployment..."
+    kubectl apply -f blue_deployment.yaml
+    kubectl wait --for=condition=available deployment/$DEPLOYMENT_NAME --timeout=120s
+fi
+
+# Show current deployment status
+echo "📊 Current deployment status:"
+kubectl get deployment $DEPLOYMENT_NAME
+echo ""
+kubectl get pods -l app=django-messaging
+
+# Set up port forwarding in background
+echo ""
+echo "🔌 Setting up port forwarding to test availability..."
+kubectl port-forward service/$SERVICE_NAME 8080:80 > /dev/null 2>&1 &
+PORT_FORWARD_PID=$!
+sleep 5
+
+# Start continuous testing in background
+echo ""
+test_app 8080 120 &
+TEST_PID=$!
+
+# Wait a moment before starting the update
+sleep 3
+
+# Apply the updated deployment (with image version 2.0)
+echo ""
+echo "🚀 Applying rolling update to version 2.0..."
+kubectl apply -f blue_deployment.yaml
+
+# Monitor the rollout status
+echo ""
+echo "⏳ Monitoring rollout progress..."
+kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=180s
+
+# Check if rollout was successful
+if [ $? -eq 0 ]; then
+    echo "✅ Rolling update completed successfully!"
+else
+    echo "❌ Rolling update failed or timed out"
+fi
+
+# Wait for the test to complete
+echo ""
+echo "⏳ Waiting for availability test to complete..."
+wait $TEST_PID
+
+# Show final deployment status
+echo ""
+echo "📊 Final deployment status:"
+kubectl get deployment $DEPLOYMENT_NAME
+
+echo ""
+echo "📦 Current running pods:"
+kubectl get pods -l app=django-messaging
+
+echo ""
+echo "🔍 Verifying pod image versions:"
+kubectl get pods -l app=django-messaging -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
+
+# Show recent events
+echo ""
+echo "📋 Recent deployment events:"
+kubectl get events --sort-by='.lastTimestamp' --field-selector involvedObject.name=$DEPLOYMENT_NAME | tail -10
+
+# Cleanup port forwarding
+kill $PORT_FORWARD_PID 2>/dev/null
+
+echo ""
+echo "✅ Rolling update verification complete!"
