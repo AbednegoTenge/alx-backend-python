@@ -1,42 +1,58 @@
 #!/bin/bash
 
-echo "----kuberScript: Kubernetes Cluster Starter----"
+echo "----kurbeScript: Kubernetes Cluster Starter----"
 
-# check that Minikube is installed
-if ! command -v minikube >/dev/null 2>&1; then
-	echo "Minikube is not installed"
-	echo "Please install minikube first:"
-	echo "https://minikube.sigs.k8s.io/docs/start/"
-	exit 1
+# Check if minikube is installed
+if ! command -v minikube &> /dev/null; then
+    echo "❌ Minikube is not installed. Installing..."
+    curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+    rm minikube-linux-amd64
 else
-	echo "Minikube is installed"
+    echo "✅ Minikube is installed"
 fi
 
-
-# start the kubernetes cluster
-echo "⏳ starting Minikube..."
-minikube start --driver=docker
-minikube start
-
-if [ $? -ne 0 ]; then
-	echo "Failed to start minikube cluster"
-	exit 1
+# Check if kubectl is installed
+if ! command -v kubectl &> /dev/null; then
+    echo "❌ kubectl is not installed. Installing..."
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+else
+    echo "✅ kubectl is installed"
 fi
-echo "Minikube cluster started successfully"
 
+# Start Minikube cluster
+echo "⏳ Starting Minikube cluster..."
+minikube start --driver=docker --wait=all --wait-timeout=6m
 
-# verify the cluster is running
-echo "⏳ verifying the cluster is running"
+# Check if minikube started successfully
+if [ $? -eq 0 ]; then
+    echo "✅ Minikube cluster started successfully"
+else
+    echo "❌ Failed to start Minikube cluster"
+    exit 1
+fi
+
+# Verify cluster is running
+echo ""
+echo "📊 Verifying cluster information..."
 kubectl cluster-info
 
-if [$? -ne 0 ]; then
-	echo "kubernetes cluster is not running"
-	exit 1
-fi
-echo "kubernetes cluster is running"
+# Get cluster status
+echo ""
+echo "🔍 Cluster Status:"
+minikube status
 
-# retrieve available pods
-echo "⏳ retrieving available pods"
+# Retrieve available pods
+echo ""
+echo "📦 Retrieving all pods across all namespaces..."
 kubectl get pods --all-namespaces
 
-echo "----kuberscript completed successfully"
+# Get nodes
+echo ""
+echo "🖥️  Cluster Nodes:"
+kubectl get nodes
+
+echo ""
+echo "✅ Kubernetes cluster setup complete!"
