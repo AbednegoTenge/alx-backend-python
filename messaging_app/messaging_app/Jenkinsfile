@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Source Code') {
+        stage('Checkout') {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-creds',
@@ -10,30 +10,36 @@ pipeline {
             }
         }
 
-        stage('Set Up Virtual Environment') {
+        stage('Install Dependencies') {
             steps {
-                sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
+                dir('messaging_app/messaging_app') {
+                    sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                    '''
+                }
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh '''
-                . venv/bin/activate
-                pytest --html=report.html --self-contained-html
-                '''
+                dir('messaging_app/messaging_app') {
+                    sh '''
+                    . venv/bin/activate
+                    pytest --html=report.html --self-contained-html
+                    '''
+                }
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'report.html', fingerprint: true
+            dir('messaging_app/messaging_app') {
+                archiveArtifacts artifacts: 'report.html', fingerprint: true
+            }
         }
     }
 }
+
