@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: messaging-app
-          image: messaging_app-web:latest   # <-- your Docker image
-          imagePullPolicy: IfNotPresent
+          image: abednegotenge/messaging_app:latest   # <-- your Docker image
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
