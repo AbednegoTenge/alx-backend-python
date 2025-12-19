@@ -10,24 +10,40 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Dependencies and run tests') {
             steps {
                 dir('messaging_app/messaging_app') {
                     sh '''
                     python3 -m venv venv
                     . venv/bin/activate
                     pip3 install -r requirements.txt
+                    pytest --html=report.html --self-contained-html
                     '''
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Build Docker Image') {
             steps {
-                dir('messaging_app/messaging_app') {
+                dir('messaging_app') {
                     sh '''
-                    . venv/bin/activate
-                    pytest --html=report.html --self-contained-html
+                    venv/bin/activate
+                    docker build -t --name abednegotenge/messaging_app:latest .
+                    '''
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdn
+                    docker push abednegotenge/messaging_app:latest
                     '''
                 }
             }
