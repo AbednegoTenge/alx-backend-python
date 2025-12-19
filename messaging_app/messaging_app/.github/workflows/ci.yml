@@ -1,0 +1,53 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: MYSQL_DB
+          MYSQL_USER: MYSQL_USER
+          MYSQL_PASSWORD: MYSQL_PASSWORD
+          MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        working-directory: messaging_app/messaging_app
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Run Django tests
+        working-directory: messaging_app
+        env:
+          DB_NAME: MYSQL_DB
+          DB_USER: MYSQL_USER
+          DB_PASSWORD: MYSQL_PASSWORD
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+        run: |
+          pytest
