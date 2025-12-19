@@ -27,7 +27,7 @@ pipeline {
             steps {
                 dir('messaging_app') {
                     sh '''
-                    docker build -t --name abednegotenge/messaging_app:latest .
+                    docker build -t abednegotenge/messaging_app:latest .
                     '''
                 }
             }
