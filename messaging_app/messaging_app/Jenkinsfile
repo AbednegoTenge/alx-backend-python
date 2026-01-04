@@ -12,11 +12,11 @@ pipeline {
 
         stage('Install Dependencies and run tests') {
             steps {
-                dir('messaging_app/messaging_app') {
+                dir('messaging_app') {
                     sh '''
                     python3 -m venv venv
                     . venv/bin/activate
-                    pip3 install -r requirements.txt
+                    pip3 install -r messaging_app/requirements.txt
                     pytest --html=report.html --self-contained-html
                     '''
                 }
